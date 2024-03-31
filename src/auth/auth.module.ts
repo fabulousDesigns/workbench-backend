@@ -15,7 +15,7 @@ import { User } from "src/entities/user.entity";
   imports: [
     PassportModule,
     JwtModule.register({
-      secret: process.env.JWT_SECRET,
+      secret: process.env.JWT_SECRET || "secret",
       signOptions: { expiresIn: "1d" },
     }),
     TypeOrmModule.forFeature([Task, Team, Subtask, User]),

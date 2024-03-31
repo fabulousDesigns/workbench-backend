@@ -13,7 +13,7 @@ export class UserService {
     @InjectRepository(Team) private teamRepository: Repository<Team>
   ) {}
 
-  async createUser(createUserDto: CreateUserDto): Promise<User> {
+  async createUser(createUserDto: CreateUserDto): Promise<any> {
     const { name, email, password, teams } = createUserDto;
     const user = new User();
     user.name = name;
@@ -26,8 +26,8 @@ export class UserService {
     try {
       await this.userRepository.save(newUser);
       return {
-        ...newUser,
-        password: undefined,
+       statusCode: 201,
+       msg: "Account created successfully",
       };
     } catch (error) {
       if (error.code === "23505" || error.code === "ER_DUP_ENTRY") {

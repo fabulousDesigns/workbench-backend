@@ -15,12 +15,16 @@ import { Task } from "./task.entity";
 export class User {
   @PrimaryGeneratedColumn() // 👈 add the PrimaryGeneratedColumn decorator
   id: number;
+  
   @Column()
   name: string;
+
   @Column()
   email: string;
+
   @Column()
   password: string;
+
   @Column({
     type: "enum",
     enum: UserRole,
@@ -31,6 +35,9 @@ export class User {
   @JoinTable()
   teams: Team[];
 
+  @Column({ nullable: true, default: true })
+  isActive: boolean;
+
   @ManyToMany(() => Task, (task) => task.users)
   tasks: Task[];
 
@@ -39,6 +46,7 @@ export class User {
 
   @Column({ default: () => "CURRENT_TIMESTAMP" })
   createdAt: Date;
+
   @Column({ default: () => "CURRENT_TIMESTAMP" })
   updatedAt: Date;
 }

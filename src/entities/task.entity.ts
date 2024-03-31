@@ -22,13 +22,16 @@ export class Task {
   @Column({ default: "inprogress" })
   status: string;
 
-  @Column({ default: false })
+  @Column({default: null})
+  dueDate: Date;
+
+  @Column({ default: false, nullable: true })
   isAssigned: boolean;
 
   @ManyToOne(() => User)
   assignedTo: User;
 
-  @Column({ default: "null" })
+  @Column({ default: null })
   assignedBy: string;
 
   @ManyToOne(() => Team, (team) => team.tasks)

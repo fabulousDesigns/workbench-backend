@@ -20,6 +20,9 @@ export class Subtask {
   @ManyToOne(() => Task, (task) => task.subtasks)
   task: Task;
 
+  @Column({default: null})
+  dueDate: Date;
+
   @ManyToMany(() => User, (user) => user.subtasks)
   @JoinTable()
   users: User[];

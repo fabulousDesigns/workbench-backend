@@ -62,17 +62,24 @@ export class AuthController {
   getAllSubtasks() {
     return this.authService.getAllSubtasks();
   }
-  @Get("team/:teamId/tasks")
+
+  @Get("team/tasks/:teamId")
   getTasksAndSubtasksByTeam(@Param("teamId") teamId: number) {
     return this.authService.getTasksAndSubtasksByTeam(teamId);
   }
   //! -> Assign a Task to a User
+  @UseGuards(JwtAuthGuard)
   @Post("assignTask")
   async assignTaskToUser(
     @Body("taskId") taskId: number,
-    @Body("userId") userId: number
+    @Body("userId") userId: number,
+    @Req() req: Request & { user: { name: string } } // Update the type of req.user
   ) {
-    const result = await this.authService.assignTaskToUser(taskId, userId);
+    const result = await this.authService.assignTaskToUser(
+      taskId,
+      userId,
+      req.user.name
+    );
     return result;
   }
   //! -> Unassign Task
@@ -83,5 +90,35 @@ export class AuthController {
   ) {
     const result = await this.authService.unassignTaskFromUser(taskId, userId);
     return result;
+  }
+
+  @Get("teams")
+  getAllTeams() {
+    return this.authService.getAllTeams();
+  }
+  //! Count all Tasks that belongs to a team
+  @Get("team/task/:teamId")
+  async countTasksByTeam(@Param("teamId") teamId: number) {
+    return this.authService.countTasksByTeam(teamId);
+  }
+  //! Count all SubTasks that belongs to a team
+  @Get("team/subtask/:teamId")
+  async countSubtasksByTeam(@Param("teamId") teamId: number) {
+    return this.authService.countSubtasksByTeam(teamId);
+  }
+  //! Count all Users that belongs to a team
+  @Get("team/users/:teamId")
+  async countUsersByTeam(@Param("teamId") teamId: number) {
+    return this.authService.countUsersByTeam(teamId);
+  }
+  // ! Get all users in a team by team ID
+  @Get("team/allusers/:teamId")
+  async getUsersByTeam(@Param("teamId") teamId: number) {
+    return this.authService.getUsersByTeam(teamId);
+  }
+  //! Count Contributors to a tasks by counting all users that are assigned to a tasks' subtasks and the user assigned to the task
+  @Get("task/contributors/:taskId")
+  async countContributorsToTask(@Param("taskId") taskId: number) {
+    return this.authService.countContributors(taskId);
   }
 }
